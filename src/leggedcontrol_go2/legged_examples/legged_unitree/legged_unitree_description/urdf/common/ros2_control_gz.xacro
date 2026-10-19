@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <ros2_control name="legged_gazebo_sim" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <xacro:macro name="hybrid_joint_gz" params="name initial_position:=0.0">
+      <joint name="${name}">
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">${initial_position}</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+    </xacro:macro>
+
+    <xacro:hybrid_joint_gz name="LF_HAA" initial_position="0.0"/>
+    <xacro:hybrid_joint_gz name="LF_HFE" initial_position="0.72"/>
+    <xacro:hybrid_joint_gz name="LF_KFE" initial_position="-1.44"/>
+    <xacro:hybrid_joint_gz name="RF_HAA" initial_position="0.0"/>
+    <xacro:hybrid_joint_gz name="RF_HFE" initial_position="0.72"/>
+    <xacro:hybrid_joint_gz name="RF_KFE" initial_position="-1.44"/>
+    <xacro:hybrid_joint_gz name="LH_HAA" initial_position="0.0"/>
+    <xacro:hybrid_joint_gz name="LH_HFE" initial_position="0.72"/>
+    <xacro:hybrid_joint_gz name="LH_KFE" initial_position="-1.44"/>
+    <xacro:hybrid_joint_gz name="RH_HAA" initial_position="0.0"/>
+    <xacro:hybrid_joint_gz name="RH_HFE" initial_position="0.72"/>
+    <xacro:hybrid_joint_gz name="RH_KFE" initial_position="-1.44"/>
+  </ros2_control>
+</robot>

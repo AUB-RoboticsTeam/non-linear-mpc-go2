@@ -1,0 +1,51 @@
+controller_manager:
+  ros__parameters:
+    use_sim_time: true
+    update_rate: 1000
+
+    joint_states_controller:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    imu_sensor_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
+    FR_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    FL_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    RR_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    RL_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    legged_controller:
+      type: legged/LeggedController
+
+joint_states_controller:
+  ros__parameters:
+    use_sim_time: true
+
+imu_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: trunk_imu
+    frame_id: imu_link
+
+FR_foot_fts_broadcaster:
+  ros__parameters:
+    sensor_name: FR_foot_fts
+    frame_id: rf_foot_link
+
+FL_foot_fts_broadcaster:
+  ros__parameters:
+    sensor_name: FL_foot_fts
+    frame_id: lf_foot_link
+
+RR_foot_fts_broadcaster:
+  ros__parameters:
+    sensor_name: RR_foot_fts
+    frame_id: rh_foot_link
+
+RL_foot_fts_broadcaster:
+  ros__parameters:
+    sensor_name: RL_foot_fts
+    frame_id: lh_foot_link

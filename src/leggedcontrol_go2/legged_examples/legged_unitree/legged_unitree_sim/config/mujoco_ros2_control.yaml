@@ -1,0 +1,62 @@
+controller_manager:
+  ros__parameters:
+    use_sim_time: true
+    update_rate: 1000
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    imu_sensor_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
+    FR_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    FL_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    RR_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+    RL_foot_fts_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    legged_controller:
+      type: legged/LeggedController
+
+    legged_cheater_controller:
+      type: legged/LeggedCheaterController
+
+joint_state_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+
+imu_sensor_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+    sensor_name: unitree_imu
+    frame_id: unitree_imu
+
+# Foot naming here (FR/FL/RR/RL) follows the go2 MJCF's own convention.
+# Positionally: FR=RF_FOOT, FL=LF_FOOT, RR=RH_FOOT, RL=LH_FOOT (same mapping
+# used for the legged_controller's contact_sensor_names launch argument).
+FR_foot_fts_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+    sensor_name: FR_foot_fts
+    frame_id: RF_FOOT
+
+FL_foot_fts_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+    sensor_name: FL_foot_fts
+    frame_id: LF_FOOT
+
+RR_foot_fts_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+    sensor_name: RR_foot_fts
+    frame_id: RH_FOOT
+
+RL_foot_fts_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+    sensor_name: RL_foot_fts
+    frame_id: LH_FOOT

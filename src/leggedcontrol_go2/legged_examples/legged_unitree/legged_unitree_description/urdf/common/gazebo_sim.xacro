@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <gazebo>
+    <plugin filename="gz-sim-pose-publisher-system" name="gz::sim::systems::PosePublisher">
+      <publish_link_pose>true</publish_link_pose>
+      <publish_sensor_pose>true</publish_sensor_pose>
+      <publish_collision_pose>false</publish_collision_pose>
+      <publish_visual_pose>false</publish_visual_pose>
+      <use_pose_vector_msg>true</use_pose_vector_msg>
+      <static_publisher>true</static_publisher>
+      <static_update_frequency>100</static_update_frequency>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find legged_unitree_sim)/config/gz_ros2_control.yaml</parameters>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+      <hold_joints>false</hold_joints>
+      <position_proportional_gain>0.0</position_proportional_gain>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="liblegged_unitree_sim.so" name="legged::sim::GroundTruthOdometryPublisher">
+      <topic>/ground_truth/state</topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base</child_frame_id>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="unitree_imu">
+    <sensor name="unitree_imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>500</update_rate>
+      <visualize>false</visualize>
+      <topic>imu/data</topic>
+      <gz_frame_id>unitree_imu</gz_frame_id>
+      <imu>
+        <angular_velocity>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></z>
+        </linear_acceleration>
+      </imu>
+      <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        <initial_orientation_as_reference>false</initial_orientation_as_reference>
+      </plugin>
+    </sensor>
+  </gazebo>
+</robot>

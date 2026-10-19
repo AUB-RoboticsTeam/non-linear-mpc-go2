@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="3">
+    <name>legged_wbc</name>
+    <version>0.0.0</version>
+    <description>Whole body control</description>
+    <maintainer email="liaoqiayuan@gmail.com">Qiayuan Liao</maintainer>
+
+    <license>BSD</license>
+    <author email="liaoqiayuan@gmail.com">Qiayuan Liao</author>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+
+    <build_depend>cmake_clang_tools</build_depend>
+    <depend>ocs2_legged_robot</depend>
+    <depend>qpoases_catkin</depend>
+    <depend>pinocchio</depend>
+    <depend>eigen3_cmake_module</depend>
+    <depend>boost</depend>
+
+    <test_depend>ament_cmake_gtest</test_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

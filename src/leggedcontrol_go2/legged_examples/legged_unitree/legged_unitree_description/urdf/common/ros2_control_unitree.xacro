@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="unitree_hybrid_joint" params="name">
+    <joint name="${name}">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <command_interface name="kp"/>
+      <command_interface name="kd"/>
+      <command_interface name="feedforward"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="unitree_contact_sensor" params="name">
+    <sensor name="${name}">
+      <state_interface name="contact"/>
+    </sensor>
+  </xacro:macro>
+
+  <xacro:macro name="unitree_imu_sensor" params="name">
+    <sensor name="${name}">
+      <state_interface name="orientation.x"/>
+      <state_interface name="orientation.y"/>
+      <state_interface name="orientation.z"/>
+      <state_interface name="orientation.w"/>
+      <state_interface name="angular_velocity.x"/>
+      <state_interface name="angular_velocity.y"/>
+      <state_interface name="angular_velocity.z"/>
+      <state_interface name="linear_acceleration.x"/>
+      <state_interface name="linear_acceleration.y"/>
+      <state_interface name="linear_acceleration.z"/>
+    </sensor>
+  </xacro:macro>
+
+  <xacro:macro name="unitree_ros2_control" params="robot_type power_limit contact_threshold domain_id:=0 network_interface:='' state_timeout:=0.10 controller_command_timeout:=0.05 command_stream_rate:=500.0 startup_timeout:=5.0 arm_ramp_duration:=2.0 max_torque:=30.0 max_kp:=80.0 max_kd:=10.0 stand_duration:=8.0 stand_kp:=50.0 stand_hold_kp:=70.0 stand_kd:=5.0 stand_crouch_hfe_target:=0.90 stand_crouch_kfe_target:=-1.80 stand_crouch_fraction:=0.45 stand_hfe_target:=0.60 stand_kfe_target:=-1.20 stand_position_tolerance:=0.18 stand_velocity_tolerance:=0.35 stand_settle_duration:=2.0 damping_kd:=3.0 release_mode_on_arm:=false require_motion_mode_check:=true">
+    <ros2_control name="legged_unitree_hw" type="system">
+      <hardware>
+        <plugin>legged_unitree_hw/UnitreeHW</plugin>
+        <param name="robot_type">${robot_type}</param>
+        <param name="power_limit">${power_limit}</param>
+        <param name="contact_threshold">${contact_threshold}</param>
+        <param name="domain_id">${domain_id}</param>
+        <param name="network_interface">${network_interface}</param>
+        <param name="state_timeout">${state_timeout}</param>
+        <param name="controller_command_timeout">${controller_command_timeout}</param>
+        <param name="command_stream_rate">${command_stream_rate}</param>
+        <param name="startup_timeout">${startup_timeout}</param>
+        <param name="arm_ramp_duration">${arm_ramp_duration}</param>
+        <param name="max_torque">${max_torque}</param>
+        <param name="max_kp">${max_kp}</param>
+        <param name="max_kd">${max_kd}</param>
+        <param name="stand_duration">${stand_duration}</param>
+        <param name="stand_kp">${stand_kp}</param>
+        <param name="stand_hold_kp">${stand_hold_kp}</param>
+        <param name="stand_kd">${stand_kd}</param>
+        <param name="stand_crouch_hfe_target">${stand_crouch_hfe_target}</param>
+        <param name="stand_crouch_kfe_target">${stand_crouch_kfe_target}</param>
+        <param name="stand_crouch_fraction">${stand_crouch_fraction}</param>
+        <param name="stand_hfe_target">${stand_hfe_target}</param>
+        <param name="stand_kfe_target">${stand_kfe_target}</param>
+        <param name="stand_position_tolerance">${stand_position_tolerance}</param>
+        <param name="stand_velocity_tolerance">${stand_velocity_tolerance}</param>
+        <param name="stand_settle_duration">${stand_settle_duration}</param>
+        <param name="damping_kd">${damping_kd}</param>
+        <param name="release_mode_on_arm">${release_mode_on_arm}</param>
+        <param name="require_motion_mode_check">${require_motion_mode_check}</param>
+      </hardware>
+
+      <xacro:unitree_hybrid_joint name="LF_HAA"/>
+      <xacro:unitree_hybrid_joint name="LF_HFE"/>
+      <xacro:unitree_hybrid_joint name="LF_KFE"/>
+      <xacro:unitree_hybrid_joint name="LH_HAA"/>
+      <xacro:unitree_hybrid_joint name="LH_HFE"/>
+      <xacro:unitree_hybrid_joint name="LH_KFE"/>
+      <xacro:unitree_hybrid_joint name="RF_HAA"/>
+      <xacro:unitree_hybrid_joint name="RF_HFE"/>
+      <xacro:unitree_hybrid_joint name="RF_KFE"/>
+      <xacro:unitree_hybrid_joint name="RH_HAA"/>
+      <xacro:unitree_hybrid_joint name="RH_HFE"/>
+      <xacro:unitree_hybrid_joint name="RH_KFE"/>
+
+      <xacro:unitree_imu_sensor name="unitree_imu"/>
+      <xacro:unitree_contact_sensor name="LF_FOOT"/>
+      <xacro:unitree_contact_sensor name="LH_FOOT"/>
+      <xacro:unitree_contact_sensor name="RF_FOOT"/>
+      <xacro:unitree_contact_sensor name="RH_FOOT"/>
+    </ros2_control>
+  </xacro:macro>
+</robot>

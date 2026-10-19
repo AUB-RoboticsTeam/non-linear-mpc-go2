@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+  <xacro:arg name="robot_type" default="go2"/>
+
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/materials.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/leg.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/imu.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/gazebo_sim.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/ros2_control_gz.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/$(arg robot_type)/const.xacro"/>
+
+  <!-- Gazebo-only passive dynamics. MuJoCo keeps its own MJCF defaults. -->
+  <xacro:property name="damping" value="0.1"/>
+  <xacro:property name="foot_radius" value="0.022"/>
+
+  <xacro:property name="mesh_path" value="file://$(find legged_unitree_description)/meshes/$(arg robot_type)"/>
+
+  <gazebo>
+    <plugin filename="liblegged_unitree_sim.so" name="legged::sim::InitialJointPositionSetter">
+      <hold_topic>/legged_initial_pose_hold</hold_topic>
+      <initial_hold>false</initial_hold>
+      <reset_steps>1</reset_steps>
+    </plugin>
+  </gazebo>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_path}/trunk.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${trunk_length} ${trunk_width} ${trunk_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="${trunk_com_x} ${trunk_com_y} ${trunk_com_z}"/>
+      <mass value="${trunk_mass}"/>
+      <inertia
+        ixx="${trunk_ixx}" ixy="${trunk_ixy}" ixz="${trunk_ixz}"
+        iyy="${trunk_iyy}" iyz="${trunk_iyz}" izz="${trunk_izz}"/>
+    </inertial>
+  </link>
+
+  <xacro:IMU connected_to="base" imu_name="unitree_imu" xyz="0 0 0" rpy="0 0 0"/>
+
+  <xacro:leg prefix="LF" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="1" front_hind_dae="True">
+    <origin rpy="0 0 0" xyz="${leg_offset_x} ${leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="LH" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="-1" front_hind_dae="False">
+    <origin rpy="0 0 0" xyz="${-leg_offset_x} ${leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="RF" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="1" front_hind_dae="True">
+    <origin rpy="0 0 0" xyz="${leg_offset_x} ${-leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="RH" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="-1" front_hind_dae="False">
+    <origin rpy="0 0 0" xyz="${-leg_offset_x} ${-leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <!-- Real Gazebo contact sensors. Gazebo collapses each fixed foot link into
+       its calf during URDF-to-SDF conversion, so attach the sensor to the
+       surviving calf and reference the generated lumped collision name. -->
+  <xacro:macro name="gazebo_foot_contact" params="prefix topic">
+    <gazebo reference="${prefix}_calf">
+      <sensor name="${prefix}_foot_contact" type="contact">
+        <always_on>true</always_on>
+        <update_rate>1000</update_rate>
+        <contact>
+          <collision>${prefix}_calf_fixed_joint_lump__${prefix}_foot_collision_collision_1</collision>
+          <topic>${topic}</topic>
+        </contact>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:gazebo_foot_contact prefix="LF" topic="/feet/LF/contacts"/>
+  <xacro:gazebo_foot_contact prefix="RF" topic="/feet/RF/contacts"/>
+  <!-- Keep the model's hind-leg link names (LH/RH), but expose the same
+       rear-left / rear-right topic convention as the reference package. -->
+  <xacro:gazebo_foot_contact prefix="LH" topic="/feet/RL/contacts"/>
+  <xacro:gazebo_foot_contact prefix="RH" topic="/feet/RR/contacts"/>
+
+  <ros2_control name="legged_imu_sensor" type="sensor">
+    <hardware>
+      <plugin>legged_unitree_sim/ImuStateSensor</plugin>
+    </hardware>
+    <sensor name="unitree_imu">
+      <state_interface name="orientation.x"/>
+      <state_interface name="orientation.y"/>
+      <state_interface name="orientation.z"/>
+      <state_interface name="orientation.w"/>
+      <state_interface name="angular_velocity.x"/>
+      <state_interface name="angular_velocity.y"/>
+      <state_interface name="angular_velocity.z"/>
+      <state_interface name="linear_acceleration.x"/>
+      <state_interface name="linear_acceleration.y"/>
+      <state_interface name="linear_acceleration.z"/>
+      <param name="topic">/gz/imu/data</param>
+    </sensor>
+  </ros2_control>
+
+  <ros2_control name="legged_contact_sensors" type="sensor">
+    <hardware>
+      <plugin>legged_unitree_sim/FootContactSensor</plugin>
+    </hardware>
+    <sensor name="FL_foot_fts">
+      <state_interface name="force.x"/>
+      <state_interface name="force.y"/>
+      <state_interface name="force.z"/>
+      <state_interface name="torque.x"/>
+      <state_interface name="torque.y"/>
+      <state_interface name="torque.z"/>
+      <param name="topic">/feet/LF/contacts</param>
+      <param name="collision">LF_calf_fixed_joint_lump__LF_foot_collision_collision_1</param>
+    </sensor>
+    <sensor name="FR_foot_fts">
+      <state_interface name="force.x"/>
+      <state_interface name="force.y"/>
+      <state_interface name="force.z"/>
+      <state_interface name="torque.x"/>
+      <state_interface name="torque.y"/>
+      <state_interface name="torque.z"/>
+      <param name="topic">/feet/RF/contacts</param>
+      <param name="collision">RF_calf_fixed_joint_lump__RF_foot_collision_collision_1</param>
+    </sensor>
+    <sensor name="RL_foot_fts">
+      <state_interface name="force.x"/>
+      <state_interface name="force.y"/>
+      <state_interface name="force.z"/>
+      <state_interface name="torque.x"/>
+      <state_interface name="torque.y"/>
+      <state_interface name="torque.z"/>
+      <param name="topic">/feet/RL/contacts</param>
+      <param name="collision">LH_calf_fixed_joint_lump__LH_foot_collision_collision_1</param>
+    </sensor>
+    <sensor name="RR_foot_fts">
+      <state_interface name="force.x"/>
+      <state_interface name="force.y"/>
+      <state_interface name="force.z"/>
+      <state_interface name="torque.x"/>
+      <state_interface name="torque.y"/>
+      <state_interface name="torque.z"/>
+      <param name="topic">/feet/RR/contacts</param>
+      <param name="collision">RH_calf_fixed_joint_lump__RH_foot_collision_collision_1</param>
+    </sensor>
+  </ros2_control>
+
+</robot>

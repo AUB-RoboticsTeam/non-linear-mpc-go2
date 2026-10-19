@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package format="3">
+    <name>legged_unitree_sim</name>
+    <version>0.0.0</version>
+    <description>Gazebo Sim launch and control configuration for Unitree robots.</description>
+    <maintainer email="liaoqiayuan@gmail.com">Qiayuan Liao</maintainer>
+    <license>BSD</license>
+    <author email="liaoqiayuan@gmail.com">Qiayuan Liao</author>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <build_depend>gz-sim8</build_depend>
+    <build_depend>gz-transport13</build_depend>
+    <build_depend>gz_ros2_control</build_depend>
+    <depend>rclcpp</depend>
+    <depend>hardware_interface</depend>
+    <depend>pluginlib</depend>
+    <depend>sensor_msgs</depend>
+    <depend>ros_gz_interfaces</depend>
+    <depend>std_msgs</depend>
+    <depend>legged_common</depend>
+
+    <exec_depend>controller_manager</exec_depend>
+    <exec_depend>gz_ros2_control</exec_depend>
+    <exec_depend>mujoco_ros2_control</exec_depend>
+    <exec_depend>legged_controllers</exec_depend>
+    <exec_depend>joint_state_broadcaster</exec_depend>
+    <exec_depend>joint_trajectory_controller</exec_depend>
+    <exec_depend>legged_unitree_description</exec_depend>
+    <exec_depend>rclpy</exec_depend>
+    <exec_depend>robot_state_publisher</exec_depend>
+    <exec_depend>ros_gz_bridge</exec_depend>
+    <exec_depend>ros_gz_sim</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+        <gz_ros2_control plugin="${prefix}/legged_unitree_sim_plugins.xml"/>
+    </export>
+</package>

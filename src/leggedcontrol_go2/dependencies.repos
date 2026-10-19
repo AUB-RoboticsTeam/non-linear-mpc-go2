@@ -1,0 +1,9 @@
+repositories:
+  src/ocs2:
+    type: git
+    url: https://github.com/leggedrobotics/ocs2.git
+    version: ros2
+  src/ocs2_robotic_assets:
+    type: git
+    url: https://github.com/leggedrobotics/ocs2_robotic_assets.git
+    version: ros2

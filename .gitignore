@@ -1,0 +1,42 @@
+# ROS 2 / colcon generated files at each workspace root
+/build/
+/install/
+/log/
+/src/elevation_mapping_cupy_ros2_ws/build/
+/src/elevation_mapping_cupy_ros2_ws/install/
+/src/elevation_mapping_cupy_ros2_ws/log/
+/src/leggedcontrol_go2/build/
+/src/leggedcontrol_go2/install/
+/src/leggedcontrol_go2/log/
+**/devel/
+.colcon/
+.ros/
+
+# Generated CMake artifacts (prebuilt vendor libraries remain tracked)
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+*.o
+
+# Python
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE and OS metadata
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Runtime logs and crash output
+*.log
+MUJOCO_LOG.TXT
+/core
+/core.*
+
+# Reversible metadata backups for vendored upstream checkouts
+**/.git-upstream/

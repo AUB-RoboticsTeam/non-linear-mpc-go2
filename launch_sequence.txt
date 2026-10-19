@@ -1,0 +1,72 @@
+LEGGED_CONTROL ROS2 MANUAL LAUNCH SEQUENCE (ROS1 parity)
+Run each step in its own terminal, in order.
+
+------------------------------------------------------------
+1. SIM OR HARDWARE
+------------------------------------------------------------
+
+Gazebo:
+  ros2 launch legged_unitree_description empty_world.launch.py robot_type:=go2 sim_backend:=gazebo
+
+MuJoCo:
+  ros2 launch legged_unitree_description empty_world.launch.py robot_type:=go2 sim_backend:=mujoco
+
+Hardware (real robot -- never cheater:=true past this point):
+  ros2 launch legged_unitree_hw legged_unitree_hw.launch.py robot_type:=go2
+
+------------------------------------------------------------
+2. LOAD THE CONTROLLER (inactive)
+------------------------------------------------------------
+
+  ros2 launch legged_controllers load_controller.launch.py robot_type:=go2 cheater:=false \
+      simulation_mode:=true   # simulation_mode:=false on hardware
+
+This starts joint_state_broadcaster, the gait bridge, and
+legged_target_trajectories_publisher, and loads legged_controller
+WITHOUT activating it (matches ROS1's `controller_manager load`).
+
+------------------------------------------------------------
+3. ACTIVATE THE CONTROLLER
+------------------------------------------------------------
+
+  ros2 service call /controller_manager/switch_controller \
+      controller_manager_msgs/srv/SwitchController \
+      "{activate_controllers: ['legged_controller'], deactivate_controllers: [], strictness: 2, activate_asap: false, timeout: {sec: 0, nanosec: 0}}"
+
+(Swap legged_controller -> legged_cheater_controller only if you loaded
+with cheater:=true -- sim only, never on hardware.)
+
+Or via the ros2 control CLI:
+  ros2 control switch_controllers --activate legged_controller
+  ros2 control list_controllers
+
+------------------------------------------------------------
+4. SET THE GAIT
+------------------------------------------------------------
+
+  ros2 run legged_controllers legged_gait_command_cli.py
+  gait> stance
+
+------------------------------------------------------------
+5. DRIVE WITH /cmd_vel
+------------------------------------------------------------
+
+  # stand up
+  ros2 topic pub -1 /cmd_vel geometry_msgs/msg/Twist "{linear: {z: 0.3}}"
+
+  # walk forward
+  ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.3}}" -r 10
+
+  # or gamepad teleop
+  ros2 launch legged_controllers joy_teleop.launch.py
+
+------------------------------------------------------------
+NOTES
+------------------------------------------------------------
+- Full doc with more detail: src/leggedcontrol_go2/docs/MANUAL_LAUNCH_SEQUENCE.md
+- Known open gap (likely next debugging target): gz_ros2_control /
+  mujoco_ros2_control only expose plain effort/position/velocity command
+  interfaces, not ROS1's hybrid position/velocity/kp/kd/feedforward
+  interface. The `simulation_mode` flag works around this today.
+- legged_unitree_hw is not currently built in this workspace (sim-only
+  build), so the hardware step above is unverified here.

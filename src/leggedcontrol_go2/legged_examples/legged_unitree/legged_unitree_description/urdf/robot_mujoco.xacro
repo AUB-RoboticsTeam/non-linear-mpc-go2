@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+  <xacro:arg name="robot_type" default="go2"/>
+
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/materials.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/leg.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/imu.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/ros2_control_mujoco.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/$(arg robot_type)/const.xacro"/>
+
+  <xacro:property name="mesh_path" value="file://$(find legged_unitree_description)/meshes/$(arg robot_type)"/>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_path}/trunk.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${trunk_length} ${trunk_width} ${trunk_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="${trunk_com_x} ${trunk_com_y} ${trunk_com_z}"/>
+      <mass value="${trunk_mass}"/>
+      <inertia
+        ixx="${trunk_ixx}" ixy="${trunk_ixy}" ixz="${trunk_ixz}"
+        iyy="${trunk_iyy}" iyz="${trunk_iyz}" izz="${trunk_izz}"/>
+    </inertial>
+  </link>
+
+  <xacro:IMU connected_to="base" imu_name="unitree_imu" xyz="0 0 0" rpy="0 0 0"/>
+
+  <!-- TF-only frame for the invisible MuJoCo L1 ray origin. The existing Go2
+       model already contains the physical/visual chin LiDAR housing. -->
+  <link name="lidar_l1_link"/>
+  <joint name="lidar_l1_joint" type="fixed">
+    <parent link="base"/>
+    <child link="lidar_l1_link"/>
+    <!-- Unitree's L1 scan frame is at the center of the bottom mounting
+         surface, not at the corner-origin used to place its DAE housing. -->
+    <origin xyz="0.281927411787 -0.000509459301 -0.023477308018"
+      rpy="2.94 0 1.5705"/>
+  </joint>
+
+  <xacro:leg prefix="LF" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="1" front_hind_dae="True">
+    <origin rpy="0 0 0" xyz="${leg_offset_x} ${leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="LH" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="-1" front_hind_dae="False">
+    <origin rpy="0 0 0" xyz="${-leg_offset_x} ${leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="RF" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="1" front_hind_dae="True">
+    <origin rpy="0 0 0" xyz="${leg_offset_x} ${-leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="RH" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="-1" front_hind_dae="False">
+    <origin rpy="0 0 0" xyz="${-leg_offset_x} ${-leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <!-- MuJoCo has no equivalent of Gazebo's standalone <sensor> plugins, so the
+       IMU is exposed as a ros2_control sensor hardware component instead.
+       mujoco_ros2_control::MujocoSystem expects a sensor named "<x>_imu" and
+       matches it to mujoco sensors named "<x>_quat"/"_gyro"/"_accel", which is
+       how mujoco/go2/go2.xml's IMU sensors (unitree_quat/unitree_gyro/
+       unitree_accel) are set up. -->
+  <ros2_control name="unitree_imu" type="system">
+    <hardware>
+      <plugin>mujoco_ros2_control/MujocoSystem</plugin>
+    </hardware>
+    <sensor name="unitree_imu">
+      <state_interface name="orientation.x"/>
+      <state_interface name="orientation.y"/>
+      <state_interface name="orientation.z"/>
+      <state_interface name="orientation.w"/>
+      <state_interface name="angular_velocity.x"/>
+      <state_interface name="angular_velocity.y"/>
+      <state_interface name="angular_velocity.z"/>
+      <state_interface name="linear_acceleration.x"/>
+      <state_interface name="linear_acceleration.y"/>
+      <state_interface name="linear_acceleration.z"/>
+    </sensor>
+  </ros2_control>
+
+  <!-- Per-foot force/torque sensors, matching the real Go2's foot force
+       sensing. mujoco_ros2_control expects a sensor named "<x>_fts" and
+       matches it to mujoco sensors named "<x>_force"/"<x>_torque", which is
+       how mujoco/go2/go2.xml's FR/FL/RR/RL_foot_force/torque sensors are
+       named. Foot naming here (FR/FL/RR/RL) intentionally follows the MJCF's
+       own convention rather than this package's LF/RF/LH/RH joint-naming
+       convention; the mapping between the two is done positionally via the
+       contact_sensor_names launch argument, same as the joint mapping. -->
+  <xacro:macro name="foot_fts_mujoco" params="name">
+    <ros2_control name="${name}_foot_fts" type="system">
+      <hardware>
+        <plugin>mujoco_ros2_control/MujocoSystem</plugin>
+      </hardware>
+      <sensor name="${name}_foot_fts">
+        <state_interface name="force.x"/>
+        <state_interface name="force.y"/>
+        <state_interface name="force.z"/>
+        <state_interface name="torque.x"/>
+        <state_interface name="torque.y"/>
+        <state_interface name="torque.z"/>
+      </sensor>
+    </ros2_control>
+  </xacro:macro>
+
+  <xacro:foot_fts_mujoco name="FR"/>
+  <xacro:foot_fts_mujoco name="FL"/>
+  <xacro:foot_fts_mujoco name="RR"/>
+  <xacro:foot_fts_mujoco name="RL"/>
+
+</robot>

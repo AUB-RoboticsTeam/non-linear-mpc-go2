@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<package format="3">
+    <name>legged_controllers</name>
+    <version>0.0.0</version>
+    <description>The legged_controllers packages.</description>
+    <maintainer email="liaoqiayuan@gmail.com">Qiayuan Liao</maintainer>
+    <license>BSD</license>
+    <author email="liaoqiayuan@gmail.com">Qiayuan Liao</author>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+
+    <build_depend>cmake_clang_tools</build_depend>
+    <depend>rclcpp</depend>
+    <depend>rclcpp_lifecycle</depend>
+    <depend>controller_interface</depend>
+    <depend>hardware_interface</depend>
+    <depend>pluginlib</depend>
+    <depend>geometry_msgs</depend>
+    <exec_depend>sensor_msgs</exec_depend>
+    <depend>tf2</depend>
+    <depend>tf2_ros</depend>
+    <depend>tf2_geometry_msgs</depend>
+    <depend>std_msgs</depend>
+    <depend>angles</depend>
+    <depend>ocs2_msgs</depend>
+    <depend>ocs2_core</depend>
+    <depend>ocs2_mpc</depend>
+    <depend>ocs2_sqp</depend>
+    <depend>ocs2_robotic_tools</depend>
+    <depend>ocs2_ros_interfaces</depend>
+    <depend>ocs2_centroidal_model</depend>
+    <depend>ocs2_pinocchio_interface</depend>
+    <depend>ocs2_legged_robot_ros</depend>
+    <depend>ocs2_self_collision_visualization</depend>
+    <depend>legged_common</depend>
+    <depend>legged_interface</depend>
+    <depend>legged_wbc</depend>
+    <depend>legged_estimation</depend>
+    <depend>legged_terrain_msgs</depend>
+
+    <exec_depend>controller_manager</exec_depend>
+    <exec_depend>controller_manager_msgs</exec_depend>
+    <exec_depend>std_srvs</exec_depend>
+    <exec_depend>joy</exec_depend>
+    <exec_depend>rclpy</exec_depend>
+    <exec_depend>grid_map_msgs</exec_depend>
+    <exec_depend>python3-numpy</exec_depend>
+    <exec_depend>python3-scipy</exec_depend>
+    <exec_depend>python3-opencv</exec_depend>
+    <exec_depend>python3-tk</exec_depend>
+    <exec_depend>teleop_twist_joy</exec_depend>
+    <exec_depend>legged_unitree_description</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+        <controller_interface plugin="${prefix}/legged_controllers_plugins.xml"/>
+    </export>
+</package>

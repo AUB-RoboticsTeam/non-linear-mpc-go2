@@ -1,0 +1,5 @@
+<library path="legged_unitree_hw">
+    <class name="legged_unitree_hw/UnitreeHW" type="legged::UnitreeHW" base_class_type="hardware_interface::SystemInterface">
+        <description>Unitree Go2 DDS low-level ros2_control hardware interface.</description>
+    </class>
+</library>

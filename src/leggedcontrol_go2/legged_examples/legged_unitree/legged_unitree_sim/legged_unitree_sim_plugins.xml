@@ -1,0 +1,8 @@
+<library path="legged_unitree_sim">
+  <class name="legged_unitree_sim/FootContactSensor" type="legged::sim::FootContactSensor" base_class_type="gz_ros2_control::GazeboSimSystemInterface">
+    <description>Gazebo contact topic bridge for Unitree foot contacts.</description>
+  </class>
+  <class name="legged_unitree_sim/ImuStateSensor" type="legged::sim::ImuStateSensor" base_class_type="gz_ros2_control::GazeboSimSystemInterface">
+    <description>Gazebo IMU topic bridge for Unitree base IMU state.</description>
+  </class>
+</library>

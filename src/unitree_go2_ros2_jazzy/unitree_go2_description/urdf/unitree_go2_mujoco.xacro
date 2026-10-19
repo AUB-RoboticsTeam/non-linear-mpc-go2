@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- MuJoCo has no equivalent of Gazebo's standalone <sensor> plugins, so the
+       IMU is exposed as a ros2_control sensor hardware component instead.
+       mujoco_ros2_control::MujocoSystem expects a sensor named "<x>_imu" and
+       matches it to mujoco sensors named "<x>_imu_quat"/"_gyro"/"_accel",
+       which is how the go2 MJCF model in unitree_go2_description/mujoco/go2
+       is set up. Run the imu_sensor_broadcaster controller and remap its
+       output to /imu/data to match the topic convention used elsewhere in
+       the stack. -->
+  <ros2_control name="trunk_imu" type="system">
+    <hardware>
+      <plugin>${ros2_control_plugin}</plugin>
+    </hardware>
+    <sensor name="trunk_imu">
+      <state_interface name="orientation.x"/>
+      <state_interface name="orientation.y"/>
+      <state_interface name="orientation.z"/>
+      <state_interface name="orientation.w"/>
+      <state_interface name="angular_velocity.x"/>
+      <state_interface name="angular_velocity.y"/>
+      <state_interface name="angular_velocity.z"/>
+      <state_interface name="linear_acceleration.x"/>
+      <state_interface name="linear_acceleration.y"/>
+      <state_interface name="linear_acceleration.z"/>
+    </sensor>
+  </ros2_control>
+
+  <!-- Per-foot force/torque sensors, matching the real Go2's foot force
+       sensing. mujoco_ros2_control expects a sensor named "<x>_fts" and
+       matches it to mujoco sensors named "<x>_force"/"<x>_torque", which is
+       how the go2 MJCF model's FR/FL/RR/RL_foot_force/torque sensors are
+       named. Run a force_torque_sensor_broadcaster per foot, same pattern as
+       imu_sensor_broadcaster above. -->
+  <xacro:macro name="foot_fts" params="name">
+    <ros2_control name="${name}_foot_fts" type="system">
+      <hardware>
+        <plugin>${ros2_control_plugin}</plugin>
+      </hardware>
+      <sensor name="${name}_foot_fts">
+        <state_interface name="force.x"/>
+        <state_interface name="force.y"/>
+        <state_interface name="force.z"/>
+        <state_interface name="torque.x"/>
+        <state_interface name="torque.y"/>
+        <state_interface name="torque.z"/>
+      </sensor>
+    </ros2_control>
+  </xacro:macro>
+
+  <xacro:foot_fts name="FR"/>
+  <xacro:foot_fts name="FL"/>
+  <xacro:foot_fts name="RR"/>
+  <xacro:foot_fts name="RL"/>
+
+</robot>

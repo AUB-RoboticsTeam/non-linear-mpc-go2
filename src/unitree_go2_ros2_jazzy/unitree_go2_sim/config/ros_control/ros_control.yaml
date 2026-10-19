@@ -1,0 +1,87 @@
+controller_manager:
+  ros__parameters:
+    use_sim_time: true
+    update_rate: 1000
+
+    joint_states_controller:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    FR_hip_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    FR_thigh_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    FR_calf_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+
+    FL_hip_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    FL_thigh_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    FL_calf_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+
+    RR_hip_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    RR_thigh_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    RR_calf_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+
+    RL_hip_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    RL_thigh_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+    RL_calf_controller:
+      type: ros2_unitree_legged_control/UnitreeLeggedController
+
+joint_states_controller:
+  ros__parameters:
+    use_sim_time: true
+
+FR_hip_controller:
+  ros__parameters:
+    joint_name: rf_hip_joint
+
+FR_thigh_controller:
+  ros__parameters:
+    joint_name: rf_upper_leg_joint
+
+FR_calf_controller:
+  ros__parameters:
+    joint_name: rf_lower_leg_joint
+
+FL_hip_controller:
+  ros__parameters:
+    joint_name: lf_hip_joint
+
+FL_thigh_controller:
+  ros__parameters:
+    joint_name: lf_upper_leg_joint
+
+FL_calf_controller:
+  ros__parameters:
+    joint_name: lf_lower_leg_joint
+
+RR_hip_controller:
+  ros__parameters:
+    joint_name: rh_hip_joint
+
+RR_thigh_controller:
+  ros__parameters:
+    joint_name: rh_upper_leg_joint
+
+RR_calf_controller:
+  ros__parameters:
+    joint_name: rh_lower_leg_joint
+
+RL_hip_controller:
+  ros__parameters:
+    joint_name: lh_hip_joint
+
+RL_thigh_controller:
+  ros__parameters:
+    joint_name: lh_upper_leg_joint
+
+RL_calf_controller:
+  ros__parameters:
+    joint_name: lh_lower_leg_joint

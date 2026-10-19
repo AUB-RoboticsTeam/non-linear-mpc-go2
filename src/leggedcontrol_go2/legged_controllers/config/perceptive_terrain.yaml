@@ -1,0 +1,18 @@
+perceptive_terrain_processor:
+  ros__parameters:
+    input_topic: /elevation_map_raw
+    output_topic: /perceptive_terrain_map
+    terrain_topic: /planar_terrain
+    processing_rate: 20.0
+    # Grandia et al., Eqs. (2) and (3).
+    local_roughness_limit: 0.020
+    local_normal_z_limit: 0.82
+    plane_roughness_limit: 0.025
+    plane_normal_z_limit: 0.87
+    minimum_plane_cells: 4
+    ransac_distance: 0.025
+    safety_margin_cells: 1
+    # Paper Section III-D torso reference preprocessing.
+    torso_dilation: 0.20
+    torso_box: 0.10
+    torso_gaussian: 0.05

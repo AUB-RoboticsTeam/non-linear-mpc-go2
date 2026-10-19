@@ -1,0 +1,92 @@
+<mujoco model="elevation">
+  <include file="go2.xml" />
+  <statistic center="0 0 0.8" extent="12" />
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.45 0.45 0.45" specular="0.2 0.2 0.2" />
+    <rgba haze="0.75 0.82 0.90 1" />
+    <global azimuth="-130" elevation="-20" />
+  </visual>
+  <worldbody>
+    <light name="sun" pos="0 0 10" dir="-0.4 0.2 -1" directional="true" castshadow="true" diffuse="0.9 0.9 0.9" specular="0.2 0.2 0.2" />
+    <body name="ground" pos="0 0 -0.05" euler="0 0 0">
+      <geom name="ground_collision" pos="0 0 0" euler="0 0 0" rgba="0.62 0.62 0.62 1" friction="0.8 0.02 0.01" condim="3" type="box" size="15 12 0.05" />
+    </body>
+    <body name="building_floor" pos="0 0 0.025" euler="0 0 0">
+      <geom name="building_floor_collision" pos="0 0 0" euler="0 0 0" rgba="0.82 0.8 0.74 1" friction="0.8 0.02 0.01" condim="3" type="box" size="10 8 0.025" />
+    </body>
+    <body name="outer_walls" pos="0 0 0" euler="0 0 0">
+      <geom name="outer_walls_back_c" pos="0 8 1.25" euler="0 0 0" rgba="0.8 0.82 0.85 1" friction="0.8 0.02 0.01" condim="3" type="box" size="10 0.1 1.25" />
+      <geom name="outer_walls_left_c" pos="-10 0 1.25" euler="0 0 0" rgba="0.8 0.82 0.85 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.1 8 1.25" />
+      <geom name="outer_walls_right_c" pos="10 0 1.25" euler="0 0 0" rgba="0.8 0.82 0.85 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.1 8 1.25" />
+      <geom name="outer_walls_front_left_c" pos="-6 -8 1.25" euler="0 0 0" rgba="0.8 0.82 0.85 1" friction="0.8 0.02 0.01" condim="3" type="box" size="4 0.1 1.25" />
+      <geom name="outer_walls_front_right_c" pos="6 -8 1.25" euler="0 0 0" rgba="0.8 0.82 0.85 1" friction="0.8 0.02 0.01" condim="3" type="box" size="4 0.1 1.25" />
+    </body>
+    <body name="internal_walls" pos="0 0 0" euler="0 0 0">
+      <geom name="internal_walls_v1c" pos="0 -5.5 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.09 1.5 1.25" />
+      <geom name="internal_walls_v2c" pos="0 0 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.09 2 1.25" />
+      <geom name="internal_walls_v3c" pos="0 5.5 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.09 1.5 1.25" />
+      <geom name="internal_walls_hl1c" pos="-7 0 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="3 0.09 1.25" />
+      <geom name="internal_walls_hl2c" pos="-1.5 0 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.5 0.09 1.25" />
+      <geom name="internal_walls_hr1c" pos="2 0 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="1.9 0.09 1.25" />
+      <geom name="internal_walls_hr2c" pos="7.5 0 1.25" euler="0 0 0" rgba="0.72 0.77 0.82 1" friction="0.8 0.02 0.01" condim="3" type="box" size="2.5 0.09 1.25" />
+    </body>
+    <body name="dining_table" pos="-5 -4 0" euler="0 0 0">
+      <geom name="dining_table_top_c" pos="0 0 0.78" euler="0 0 0" rgba="0.45 0.25 0.1 1" friction="0.8 0.02 0.01" condim="3" type="box" size="1.2 0.6 0.06" />
+      <geom name="dining_table_l1c" pos="-1 -0.45 0.39" euler="0 0 0" rgba="0.55 0.55 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.06 0.06 0.39" />
+      <geom name="dining_table_l2c" pos="1 -0.45 0.39" euler="0 0 0" rgba="0.55 0.55 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.06 0.06 0.39" />
+      <geom name="dining_table_l3c" pos="-1 0.45 0.39" euler="0 0 0" rgba="0.55 0.55 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.06 0.06 0.39" />
+      <geom name="dining_table_l4c" pos="1 0.45 0.39" euler="0 0 0" rgba="0.55 0.55 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.06 0.06 0.39" />
+    </body>
+    <body name="chair_1" pos="-5 -5.1 0" euler="0 0 0">
+      <geom name="chair_1_base_c" pos="0 0 0.22" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.21 0.21 0.22" />
+      <geom name="chair_1_back_c" pos="0 0.22 0.8" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.275 0.05 0.35" />
+    </body>
+    <body name="chair_2" pos="-5 -2.9 0" euler="0 0 3.14159">
+      <geom name="chair_2_base_c" pos="0 0 0.22" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.21 0.21 0.22" />
+      <geom name="chair_2_back_c" pos="0 0.22 0.8" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.275 0.05 0.35" />
+    </body>
+    <body name="chair_3" pos="-6.6 -4 0" euler="0 0 -1.5708">
+      <geom name="chair_3_base_c" pos="0 0 0.22" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.21 0.21 0.22" />
+      <geom name="chair_3_back_c" pos="0 0.22 0.8" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.275 0.05 0.35" />
+    </body>
+    <body name="chair_4" pos="-3.4 -4 0" euler="0 0 1.5708">
+      <geom name="chair_4_base_c" pos="0 0 0.22" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.21 0.21 0.22" />
+      <geom name="chair_4_back_c" pos="0 0.22 0.8" euler="0 0 0" rgba="0.25 0.35 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.275 0.05 0.35" />
+    </body>
+    <body name="office_desk" pos="5 -4.5 0" euler="0 0 0">
+      <geom name="office_desk_top_c" pos="0 0 0.75" euler="0 0 0" rgba="0.5 0.32 0.16 1" friction="0.8 0.02 0.01" condim="3" type="box" size="1.25 0.45 0.06" />
+      <geom name="office_desk_p1c" pos="-0.95 0 0.36" euler="0 0 0" rgba="0.55 0.55 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.175 0.35 0.36" />
+      <geom name="office_desk_p2c" pos="0.95 0 0.36" euler="0 0 0" rgba="0.55 0.55 0.55 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.175 0.35 0.36" />
+    </body>
+    <body name="cabinet" pos="8.5 -5.7 0.9" euler="0 0 0">
+      <geom name="cabinet_c" pos="0 0 0" euler="0 0 0" rgba="0.48 0.5 0.52 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.6 0.275 0.9" />
+    </body>
+    <body name="low_platform" pos="-6 4.5 0.12" euler="0 0 0">
+      <geom name="low_platform_c" pos="0 0 0" euler="0 0 0" rgba="0.35 0.55 0.35 1" friction="0.8 0.02 0.01" condim="3" type="box" size="1.5 1.25 0.12" />
+    </body>
+    <body name="ramp" pos="-3.75 4.5 0.12" euler="0 0.12 0">
+      <geom name="ramp_c" pos="0 0 0" euler="0 0 0" rgba="0.42 0.62 0.42 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.75 1.25 0.12" />
+    </body>
+    <body name="step_1" pos="3 4.5 0.05" euler="0 0 0">
+      <geom name="step_1_c" pos="0 0 0" euler="0 0 0" rgba="0.6 0.45 0.25 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.6 1.5 0.05" />
+    </body>
+    <body name="step_2" pos="4.2 4.5 0.1" euler="0 0 0">
+      <geom name="step_2_c" pos="0 0 0" euler="0 0 0" rgba="0.62 0.47 0.27 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.6 1.5 0.1" />
+    </body>
+    <body name="step_3" pos="5.4 4.5 0.15" euler="0 0 0">
+      <geom name="step_3_c" pos="0 0 0" euler="0 0 0" rgba="0.64 0.49 0.29 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.6 1.5 0.15" />
+    </body>
+    <body name="cylinder_obstacle" pos="7.5 5.3 0.35" euler="0 0 0">
+      <geom name="cylinder_obstacle_c" pos="0 0 0" euler="0 0 0" rgba="0.65 0.25 0.2 1" friction="0.8 0.02 0.01" condim="3" type="cylinder" size="0.45 0.35" />
+    </body>
+    <body name="small_box_1" pos="1.5 -2.5 0.1" euler="0 0 0.35">
+      <geom name="small_box_1_c" pos="0 0 0" euler="0 0 0" rgba="0.7 0.55 0.18 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.4 0.3 0.1" />
+    </body>
+    <body name="small_box_2" pos="2.8 -6 0.18" euler="0 0 -0.4">
+      <geom name="small_box_2_c" pos="0 0 0" euler="0 0 0" rgba="0.7 0.42 0.18 1" friction="0.8 0.02 0.01" condim="3" type="box" size="0.5 0.35 0.18" />
+    </body>
+    <body name="narrow_beam" pos="0 -5.7 0.075" euler="0 0 0">
+      <geom name="narrow_beam_c" pos="0 0 0" euler="0 0 0" rgba="0.72 0.3 0.22 1" friction="0.8 0.02 0.01" condim="3" type="box" size="1.5 0.125 0.075" />
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+  <xacro:arg name="robot_type" default="go2"/>
+  <xacro:arg name="power_limit" default="4"/>
+  <xacro:arg name="contact_threshold" default="30"/>
+  <xacro:arg name="domain_id" default="0"/>
+  <xacro:arg name="network_interface" default=""/>
+  <xacro:arg name="state_timeout" default="0.10"/>
+  <xacro:arg name="controller_command_timeout" default="0.05"/>
+  <xacro:arg name="command_stream_rate" default="500.0"/>
+  <xacro:arg name="startup_timeout" default="5.0"/>
+  <xacro:arg name="arm_ramp_duration" default="2.0"/>
+  <xacro:arg name="max_torque" default="30.0"/>
+  <xacro:arg name="max_kp" default="80.0"/>
+  <xacro:arg name="max_kd" default="10.0"/>
+  <xacro:arg name="stand_duration" default="8.0"/>
+  <xacro:arg name="stand_kp" default="50.0"/>
+  <xacro:arg name="stand_hold_kp" default="70.0"/>
+  <xacro:arg name="stand_kd" default="5.0"/>
+  <xacro:arg name="stand_crouch_hfe_target" default="0.90"/>
+  <xacro:arg name="stand_crouch_kfe_target" default="-1.80"/>
+  <xacro:arg name="stand_crouch_fraction" default="0.45"/>
+  <xacro:arg name="stand_hfe_target" default="0.60"/>
+  <xacro:arg name="stand_kfe_target" default="-1.20"/>
+  <xacro:arg name="stand_position_tolerance" default="0.18"/>
+  <xacro:arg name="stand_velocity_tolerance" default="0.35"/>
+  <xacro:arg name="stand_settle_duration" default="2.0"/>
+  <xacro:arg name="damping_kd" default="3.0"/>
+  <xacro:arg name="release_mode_on_arm" default="false"/>
+  <xacro:arg name="require_motion_mode_check" default="true"/>
+
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/materials.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/leg.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/imu.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/common/ros2_control_unitree.xacro"/>
+  <xacro:include filename="$(find legged_unitree_description)/urdf/$(arg robot_type)/const.xacro"/>
+
+  <xacro:property name="mesh_path" value="file://$(find legged_unitree_description)/meshes/$(arg robot_type)"/>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_path}/trunk.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="${trunk_length} ${trunk_width} ${trunk_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="${trunk_com_x} ${trunk_com_y} ${trunk_com_z}"/>
+      <mass value="${trunk_mass}"/>
+      <inertia
+        ixx="${trunk_ixx}" ixy="${trunk_ixy}" ixz="${trunk_ixz}"
+        iyy="${trunk_iyy}" iyz="${trunk_iyz}" izz="${trunk_izz}"/>
+    </inertial>
+  </link>
+
+  <xacro:IMU connected_to="base" imu_name="unitree_imu" xyz="0 0 0" rpy="0 0 0"/>
+
+  <xacro:leg prefix="LF" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="1" front_hind_dae="True">
+    <origin rpy="0 0 0" xyz="${leg_offset_x} ${leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="LH" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="-1" front_hind_dae="False">
+    <origin rpy="0 0 0" xyz="${-leg_offset_x} ${leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="RF" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="1" front_hind_dae="True">
+    <origin rpy="0 0 0" xyz="${leg_offset_x} ${-leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:leg prefix="RH" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="-1" front_hind_dae="False">
+    <origin rpy="0 0 0" xyz="${-leg_offset_x} ${-leg_offset_y} 0"/>
+  </xacro:leg>
+
+  <xacro:unitree_ros2_control
+      robot_type="$(arg robot_type)"
+      power_limit="$(arg power_limit)"
+      contact_threshold="$(arg contact_threshold)"
+      domain_id="$(arg domain_id)"
+      network_interface="$(arg network_interface)"
+      state_timeout="$(arg state_timeout)"
+      controller_command_timeout="$(arg controller_command_timeout)"
+      command_stream_rate="$(arg command_stream_rate)"
+      startup_timeout="$(arg startup_timeout)"
+      arm_ramp_duration="$(arg arm_ramp_duration)"
+      max_torque="$(arg max_torque)"
+      max_kp="$(arg max_kp)"
+      max_kd="$(arg max_kd)"
+      stand_duration="$(arg stand_duration)"
+      stand_kp="$(arg stand_kp)"
+      stand_hold_kp="$(arg stand_hold_kp)"
+      stand_kd="$(arg stand_kd)"
+      stand_crouch_hfe_target="$(arg stand_crouch_hfe_target)"
+      stand_crouch_kfe_target="$(arg stand_crouch_kfe_target)"
+      stand_crouch_fraction="$(arg stand_crouch_fraction)"
+      stand_hfe_target="$(arg stand_hfe_target)"
+      stand_kfe_target="$(arg stand_kfe_target)"
+      stand_position_tolerance="$(arg stand_position_tolerance)"
+      stand_velocity_tolerance="$(arg stand_velocity_tolerance)"
+      stand_settle_duration="$(arg stand_settle_duration)"
+      damping_kd="$(arg damping_kd)"
+      release_mode_on_arm="$(arg release_mode_on_arm)"
+      require_motion_mode_check="$(arg require_motion_mode_check)"/>
+</robot>

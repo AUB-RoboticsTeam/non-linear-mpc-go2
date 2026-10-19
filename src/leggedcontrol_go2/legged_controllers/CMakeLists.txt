@@ -1,0 +1,168 @@
+cmake_minimum_required(VERSION 3.8)
+project(legged_controllers)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(controller_interface REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(angles REQUIRED)
+find_package(ocs2_msgs REQUIRED)
+find_package(ocs2_core REQUIRED)
+find_package(ocs2_mpc REQUIRED)
+find_package(ocs2_sqp REQUIRED)
+find_package(ocs2_robotic_tools REQUIRED)
+find_package(ocs2_ros_interfaces REQUIRED)
+find_package(ocs2_centroidal_model REQUIRED)
+find_package(ocs2_pinocchio_interface REQUIRED)
+find_package(ocs2_legged_robot_ros REQUIRED)
+find_package(ocs2_self_collision_visualization REQUIRED)
+find_package(legged_common REQUIRED)
+find_package(legged_interface REQUIRED)
+find_package(legged_wbc REQUIRED)
+find_package(legged_estimation REQUIRED)
+find_package(legged_terrain_msgs REQUIRED)
+find_package(pinocchio REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Boost REQUIRED COMPONENTS system filesystem log_setup log)
+
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+        rclcpp
+        rclcpp_lifecycle
+        controller_interface
+        hardware_interface
+        pluginlib
+        geometry_msgs
+        tf2
+        tf2_ros
+        std_msgs
+        tf2_geometry_msgs
+        angles
+        ocs2_msgs
+        ocs2_core
+        ocs2_mpc
+        ocs2_sqp
+        ocs2_robotic_tools
+        ocs2_ros_interfaces
+        ocs2_centroidal_model
+        ocs2_pinocchio_interface
+        ocs2_legged_robot_ros
+        ocs2_self_collision_visualization
+        legged_common
+        legged_interface
+        legged_wbc
+        legged_estimation
+        legged_terrain_msgs
+        )
+
+add_library(${PROJECT_NAME} SHARED
+        src/LeggedController.cpp
+        )
+
+target_include_directories(${PROJECT_NAME}
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        ${EIGEN3_INCLUDE_DIRS}
+        ${pinocchio_INCLUDE_DIRS}
+        )
+
+target_link_libraries(${PROJECT_NAME}
+        PUBLIC
+        pinocchio::pinocchio
+        )
+
+ament_target_dependencies(${PROJECT_NAME}
+        PUBLIC
+        ${THIS_PACKAGE_INCLUDE_DEPENDS}
+        )
+
+target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS} ${OCS2_PINOCCHIO_FLAGS})
+
+pluginlib_export_plugin_description_file(controller_interface legged_controllers_plugins.xml)
+
+add_executable(legged_target_trajectories_publisher
+        src/TargetTrajectoriesPublisher.cpp
+        )
+
+target_include_directories(legged_target_trajectories_publisher
+        PRIVATE
+        include
+        ${EIGEN3_INCLUDE_DIRS}
+        )
+
+ament_target_dependencies(legged_target_trajectories_publisher
+        rclcpp
+        geometry_msgs
+        tf2
+        tf2_ros
+        tf2_geometry_msgs
+        ocs2_msgs
+        ocs2_core
+        ocs2_mpc
+        ocs2_robotic_tools
+        ocs2_ros_interfaces
+        )
+
+target_compile_options(legged_target_trajectories_publisher PRIVATE ${OCS2_CXX_FLAGS})
+
+install(TARGETS ${PROJECT_NAME} legged_target_trajectories_publisher
+        EXPORT export_${PROJECT_NAME}
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION lib/${PROJECT_NAME}
+        )
+
+install(PROGRAMS
+        scripts/legged_cheater_console.py
+        scripts/legged_command_gui.py
+        scripts/legged_gait_command_bridge.py
+        scripts/legged_gait_command_cli.py
+        scripts/legged_foothold_command.py
+        scripts/check_perception_pipeline.py
+        scripts/perceptive_terrain_processor.py
+        scripts/terrain_foothold_planner.py
+        DESTINATION lib/${PROJECT_NAME}
+        )
+
+install(FILES
+        scripts/gait_command_common.py
+        DESTINATION lib/${PROJECT_NAME}
+        )
+
+install(DIRECTORY include/${PROJECT_NAME}/
+        DESTINATION include/${PROJECT_NAME}
+        FILES_MATCHING PATTERN "*.h"
+        )
+
+install(DIRECTORY launch config
+        DESTINATION share/${PROJECT_NAME}
+        )
+
+install(EXPORT export_${PROJECT_NAME}
+        DESTINATION share/${PROJECT_NAME}/cmake
+        )
+
+ament_export_include_directories(
+        include
+        ${pinocchio_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIRS}
+        )
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(
+        ${THIS_PACKAGE_INCLUDE_DEPENDS}
+        pinocchio
+        Eigen3
+        Boost
+        )
+
+ament_package()
