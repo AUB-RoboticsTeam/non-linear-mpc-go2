@@ -103,6 +103,52 @@ source install/setup.bash
 
 After rebuilding a controller or simulator plugin, fully restart the simulator so it loads the new shared library.
 
+## Important launch commands
+
+These are the primary launch commands for hardware and simulation.
+
+### Go2 hardware
+
+```bash
+ros2 launch legged_unitree_hw go2.launch.py \
+  network_interface:=eno1 \
+  load_mpc_controller:=true \
+  start_controller:=false \
+  release_mode_on_arm:=true \
+  max_torque:=30.0 \
+  arm_ramp_duration:=5.0
+```
+
+### MuJoCo elevation world
+
+```bash
+ros2 launch legged_unitree_sim go2_mpc_mujoco_elevation.launch.py \
+  rviz:=true \
+  start_controller:=true \
+  start_joint_state_broadcaster:=true \
+  start_command_console:=false
+```
+
+### Gazebo
+
+```bash
+ros2 launch legged_unitree_sim go2_mpc_gz.launch.py \
+  rviz:=true \
+  start_joint_state_broadcaster:=true \
+  start_controller:=false \
+  start_command_console:=false
+```
+
+### Command GUI and joystick
+
+Start the command GUI in a separate terminal:
+
+```bash
+ros2 launch legged_controllers command_gui.launch.py
+```
+
+To arm using the joystick, hold **R1**.
+
 ## Quick start: MuJoCo
 
 Start the simulator and load the controller in an inactive state:
