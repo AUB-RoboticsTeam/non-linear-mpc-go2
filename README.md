@@ -4,6 +4,12 @@ ROS 2 Jazzy workspace for nonlinear model predictive control (NMPC), whole-body 
 
 The controller uses OCS2 SQP-MPC to optimize body motion and contact forces, then a weighted or hierarchical whole-body controller (WBC) converts the plan into joint commands. The real Go2 and MuJoCo pipelines have both been operated successfully in the project maintainer's setup, with very good results. The Gazebo Sim pipeline is still under active development.
 
+## Real Go2 hardware demo (10-second excerpt)
+
+This high-quality excerpt covers seconds 27–37 of the original real-hardware recording. It keeps the source resolution (848 × 530) and frame rate (12 fps); the clip is hosted by GitHub and plays inline below.
+
+https://github.com/user-attachments/assets/246ccc78-2b85-4572-8b53-3ff74e06874f
+
 > [!WARNING]
 > This is research software, not a safety-certified product. Real Go2 operation has been completed successfully in the maintainer's setup, but results depend on the robot, network, and environment. Follow the hardware startup sequence, keep people clear of the robot, and retain access to the robot's emergency stop.
 
