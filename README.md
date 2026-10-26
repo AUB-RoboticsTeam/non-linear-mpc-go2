@@ -325,11 +325,11 @@ The current pipeline provides 2.5-D elevation-map classification and planar regi
 
 ## Demonstrations
 
-The MuJoCo gait video is compressed from the original 4K-wide screen capture to keep the repository media below GitHub's 100 MB per-file limit. The original full-resolution source is retained locally as `media/mujoco_gaits_demo_original.mp4` and is intentionally excluded from Git. If you need to distribute that original, upload it to a publicly accessible video/Drive location and link it here.
+The video thumbnails below open the corresponding Google Drive video player. The share links were checked and are accessible without an AUB sign-in. The MuJoCo clip is a compressed copy of the original 4K-wide screen capture; its full-resolution source remains local as `media/mujoco_gaits_demo_original.mp4` and is excluded from Git because it exceeds GitHub's per-file limit.
 
 | MuJoCo + RViz | Real Go2 hardware |
 |---|---|
-| [![MuJoCo simulation and RViz](media/mujoco_with_rviz.png)](media/mujoco_gaits_demo.mp4) [Watch the gait demo](media/mujoco_gaits_demo.mp4) | [![Go2 real-hardware trot](media/real_hardware_trot.png)](media/go2_real_hardware_trot.mp4) [Watch the hardware trot demo](media/go2_real_hardware_trot.mp4) |
+| [![MuJoCo simulation and RViz](media/mujoco_with_rviz.png)](https://drive.google.com/file/d/1bmITd7kp1g4vL5xaMOoQj8RbcLCactXg/view?usp=sharing) [Watch the gait demo](https://drive.google.com/file/d/1bmITd7kp1g4vL5xaMOoQj8RbcLCactXg/view?usp=sharing) | [![Go2 real-hardware trot](media/real_hardware_trot.png)](https://drive.google.com/file/d/1OjJas5KK0M-nNLhhVgXe_lSlBJiwA5VI/view?usp=sharing) [Watch the hardware trot demo](https://drive.google.com/file/d/1OjJas5KK0M-nNLhhVgXe_lSlBJiwA5VI/view?usp=sharing) |
 
 ## Safety and current limitations
 
